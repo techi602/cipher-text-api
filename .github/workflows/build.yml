@@ -1,0 +1,52 @@
+name: build
+
+on:
+  push:
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-latest ]
+        php-versions: [ '8.1' ]
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+
+      - name: Check PHP version
+        run: php -v
+
+      - name: Check Composer version
+        run: composer -V
+
+      - name: Check PHP extensions
+        run: php -m
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Install php-cs-fixer
+        run: composer install --working-dir tools/php-cs-fixer --prefer-dist --no-progress --no-suggest
+
+      - name: Run test suite
+        run: composer test:all
+        env:
+          APP_ENV: github
+          PHP_CS_FIXER_IGNORE_ENV: 1

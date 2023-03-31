@@ -1,0 +1,49 @@
+{
+    "name": "techi602/cipher-text-api",
+    "description": "cipher text API",
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "ext-openssl": "*",
+        "php-di/php-di": "^7.0",
+        "slim/slim": "^4.11",
+        "slim/psr7": "^1.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "selective/test-traits": "^3.0",
+        "symfony/var-dumper": "^6.2",
+        "phpstan/phpstan": "^1.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Test\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Michal Vrchota",
+            "email": "michal.vrchota@gmail.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "cs:fix": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src",
+        "cs:check": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --format=txt --verbose --diff --ansi src",
+        "test": "vendor/bin/phpunit tests",
+        "stan": "vendor/bin/phpstan",
+        "test:all": [
+            "@cs:check",
+            "@stan",
+            "@test"
+        ]
+    }
+}
